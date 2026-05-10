@@ -1,0 +1,56 @@
+{
+	"name" : "Companies",
+	"route" : "companies",
+	"description" : "<p>TMS companies component</p>",
+	"module_type" : "components",
+	"app_type" : "tms",
+	"category" : "admin",
+	"version" : "0.0.0",
+	"repo" : "https://github.com/sp-tms/tms-components-admin-companies",
+	"class" : "Apps\\Tms\\Components\\Companies\\CompaniesComponent",
+	"dependencies" : 
+	{
+		"core" : 
+		{
+			"name" : "Core",
+			"version" : "0.0.0-rc.15",
+			"repo" : "https://github.com/sp-framework/core"
+		},
+		"apptype" : 
+		{
+			"name" : "Transport Management System",
+			"version" : "0.0.0",
+			"repo" : "https://github.com/sp-tms/tms"
+		},
+		"packages" : [],
+		"middlewares" : [],
+		"views" : [],
+		"externals" : 
+		{
+			"composer" : 
+			{
+				"require" : []
+			},
+			"config" : 
+			{
+				"allow-plugins" : []
+			},
+			"extra" : 
+			{
+				"patches" : []
+			}
+		}
+	},
+	"menu" : 
+	{
+		"companies" : 
+		{
+			"title" : "companies",
+			"icon" : "building",
+			"link" : "companies"
+		},
+		"seq" : "0"
+	},
+	"widgets" : [],
+	"settings" : []
+}
