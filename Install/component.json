@@ -22,7 +22,14 @@
 			"version" : "0.0.0",
 			"repo" : "https://github.com/sp-tms/tms"
 		},
-		"packages" : [],
+		"packages" : 
+		[
+			{
+				"name" : "Companies",
+				"version" : "0.0.0",
+				"repo" : "https://github.com/sp-tms/tms-packages-admin-companies"
+			}
+		],
 		"middlewares" : [],
 		"views" : [],
 		"externals" : 
@@ -52,5 +59,25 @@
 		"seq" : "0"
 	},
 	"widgets" : [],
+	"filters" : 
+	[
+		{
+			"name" : "All Organisations",
+			"conditions" : "-|business_type|equals|organisations&",
+			"is_default" : false
+		},
+		
+		{
+			"name" : "All Customers",
+			"conditions" : "-|business_type|equals|customers&",
+			"is_default" : true
+		},
+		
+		{
+			"name" : "All Vendors",
+			"conditions" : "-|business_type|equals|vendors&",
+			"is_default" : false
+		}
+	],
 	"settings" : []
 }

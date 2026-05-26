@@ -2,15 +2,19 @@
 
 namespace Apps\Tms\Components\Companies;
 
+use Apps\Tms\Packages\Adminltetags\Traits\DynamicTable;
+use Apps\Tms\Packages\Companies\Companies;
 use System\Base\BaseComponent;
 
 class CompaniesComponent extends BaseComponent
 {
-    protected $package;
+    use DynamicTable;
+
+    protected $companiesPackage;
 
     public function initialize()
     {
-        //$this->package = $this->usePackage(?::class);
+        $this->companiesPackage = $this->usePackage(Companies::class);
     }
 
     /**
@@ -18,7 +22,71 @@ class CompaniesComponent extends BaseComponent
      */
     public function viewAction()
     {
-        return;
+        if (isset($this->getData()['id'])) {
+            if (isset($this->getData()['businesstype']) && $this->getData()['businesstype'] !== 'organisations') {
+                $organisations = $this->companiesPackage->getCompaniesByBusinessType();
+
+                $this->view->organisations = $organisations;
+            }
+
+            if ($this->getData()['id'] != 0) {
+                $company = $this->companiesPackage->getCompany((int) $this->getData()['id']);
+
+                if (!$company) {
+                    return $this->throwIdNotFound();
+                }
+
+                if ($company['business_type'] !== 'organisations' &&
+                    !isset($this->view->organisations)
+                ) {
+                    $organisations = $this->companiesPackage->getCompaniesByBusinessType();
+
+                    $this->view->organisations = $organisations;
+                }
+                $this->view->company = $company;
+            }
+
+            $this->view->pick('companies/view');
+
+            return;
+        }
+
+        $controlActions =
+            [
+                'actionsToEnable'       =>
+                [
+                    'edit'      => 'companies'
+                ]
+            ];
+
+        $conditions = [];
+        $conditions['order'] = 'name asc';
+
+        $replaceColumns =
+            function ($dataArr) {
+                if ($dataArr && is_array($dataArr) && count($dataArr) > 0) {
+                    foreach ($dataArr as &$data) {
+                        $data['business_type'] = ucfirst($data['business_type']);
+                    }
+                }
+
+                return $dataArr;
+            };
+
+        $this->generateDTContent(
+            $this->companiesPackage,
+            'companies/view',
+            $conditions,
+            ['name', 'business_type', 'company_phone_1', 'company_phone_2', 'company_email'],
+            true,
+            ['name', 'business_type', 'company_phone_1', 'company_phone_2', 'company_email'],
+            $controlActions,
+            ['business_type' => 'type', 'company_phone_1' => 'phone #1', 'company_phone_2' => 'phone #2', 'company_email' => 'email'],
+            $replaceColumns,
+            'name'
+        );
+
+        $this->view->pick('companies/list');
     }
 
     /**
@@ -28,11 +96,11 @@ class CompaniesComponent extends BaseComponent
     {
         $this->requestIsPost();
 
-        //$this->package->add{?}($this->postData());
+        $this->companiesPackage->addCompany($this->postData());
 
         $this->addResponse(
-            $this->package->packagesData->responseMessage,
-            $this->package->packagesData->responseCode
+            $this->companiesPackage->packagesData->responseMessage,
+            $this->companiesPackage->packagesData->responseCode
         );
     }
 
@@ -43,11 +111,11 @@ class CompaniesComponent extends BaseComponent
     {
         $this->requestIsPost();
 
-        //$this->package->update{?}($this->postData());
+        $this->companiesPackage->updateCompany($this->postData());
 
         $this->addResponse(
-            $this->package->packagesData->responseMessage,
-            $this->package->packagesData->responseCode
+            $this->companiesPackage->packagesData->responseMessage,
+            $this->companiesPackage->packagesData->responseCode
         );
     }
 
@@ -58,11 +126,24 @@ class CompaniesComponent extends BaseComponent
     {
         $this->requestIsPost();
 
-        //$this->package->remove{?}($this->postData());
+        $this->companiesPackage->removeCompany($this->postData());
 
         $this->addResponse(
-            $this->package->packagesData->responseMessage,
-            $this->package->packagesData->responseCode
+            $this->companiesPackage->packagesData->responseMessage,
+            $this->companiesPackage->packagesData->responseCode
+        );
+    }
+
+    public function getCompanyAction()
+    {
+        $this->requestIsPost();
+
+        $this->companiesPackage->getCompany((int) $this->postData()['company_id']);
+
+        $this->addResponse(
+            $this->companiesPackage->packagesData->responseMessage,
+            $this->companiesPackage->packagesData->responseCode,
+            $this->companiesPackage->packagesData->responseData ?? []
         );
     }
 }
