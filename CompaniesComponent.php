@@ -30,6 +30,8 @@ class CompaniesComponent extends BaseComponent
             }
 
             if ($this->getData()['id'] != 0) {
+                $this->companiesPackage->useMutex(true);
+
                 $company = $this->companiesPackage->getCompany((int) $this->getData()['id']);
 
                 if (!$company) {
@@ -43,6 +45,7 @@ class CompaniesComponent extends BaseComponent
 
                     $this->view->organisations = $organisations;
                 }
+
                 $this->view->company = $company;
             }
 
@@ -91,6 +94,7 @@ class CompaniesComponent extends BaseComponent
 
     /**
      * @acl(name=add)
+     * @notification(name=add)
      */
     public function addAction()
     {
@@ -102,14 +106,21 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
+
+        if ($this->companiesPackage->packagesData->responseCode === 0) {
+            $this->addToNotification('add', 'Added new company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
+        }
     }
 
     /**
      * @acl(name=update)
+     * @notification(name=update)
      */
     public function updateAction()
     {
         $this->requestIsPost();
+
+        $this->companiesPackage->useMutex(true);
 
         $this->companiesPackage->updateCompany($this->postData());
 
@@ -117,10 +128,15 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
+
+        if ($this->companiesPackage->packagesData->responseCode === 0) {
+            $this->addToNotification('update', 'Updated company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
+        }
     }
 
     /**
      * @acl(name=remove)
+     * @notification(name=remove)
      */
     public function removeAction()
     {
@@ -132,6 +148,10 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
+
+        if ($this->companiesPackage->packagesData->responseCode === 0) {
+            $this->addToNotification('remove', 'Archived company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
+        }
     }
 
     public function getCompanyAction()
