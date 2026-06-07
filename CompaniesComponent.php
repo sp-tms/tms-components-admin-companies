@@ -12,9 +12,17 @@ class CompaniesComponent extends BaseComponent
 
     protected $companiesPackage;
 
-    public function initialize()
+    public function initialize($onlyActivityLogs = false)
     {
         $this->companiesPackage = $this->usePackage(Companies::class);
+
+        $this->setActivityLogsPackage($this->companiesPackage, 'companies/activitylogs');
+
+        if ($onlyActivityLogs) {
+            return;
+        }
+
+        $this->setNotificationPackage($this->companiesPackage);
     }
 
     /**
@@ -58,7 +66,8 @@ class CompaniesComponent extends BaseComponent
             [
                 'actionsToEnable'       =>
                 [
-                    'edit'      => 'companies'
+                    'edit'      => 'companies',
+                    'remove'    => 'companies/remove'
                 ]
             ];
 
@@ -106,10 +115,6 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
-
-        if ($this->companiesPackage->packagesData->responseCode === 0) {
-            $this->addToNotification('add', 'Added new company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
-        }
     }
 
     /**
@@ -128,10 +133,6 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
-
-        if ($this->companiesPackage->packagesData->responseCode === 0) {
-            $this->addToNotification('update', 'Updated company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
-        }
     }
 
     /**
@@ -148,6 +149,8 @@ class CompaniesComponent extends BaseComponent
             $this->companiesPackage->packagesData->responseMessage,
             $this->companiesPackage->packagesData->responseCode
         );
+
+        $this->setNotificationPackage();
 
         if ($this->companiesPackage->packagesData->responseCode === 0) {
             $this->addToNotification('remove', 'Archived company ' . $this->companiesPackage->packagesData->last['name'], null, $this->companiesPackage->packagesData->last);
