@@ -31,10 +31,14 @@ class CompaniesComponent extends BaseComponent
     public function viewAction()
     {
         if (isset($this->getData()['id'])) {
-            if (isset($this->getData()['businesstype']) && $this->getData()['businesstype'] !== 'organisations') {
-                $organisations = $this->companiesPackage->getCompaniesByBusinessType();
+            if (isset($this->getData()['businesstype'])) {
+                $this->view->businessType = $this->getData()['businesstype'];
 
-                $this->view->organisations = $organisations;
+                if ($this->getData()['businesstype'] !== 'organisations') {
+                    $organisations = $this->companiesPackage->getCompaniesByBusinessType();
+
+                    $this->view->organisations = $organisations;
+                }
             }
 
             if ($this->getData()['id'] != 0) {
