@@ -31,7 +31,14 @@
 			}
 		],
 		"middlewares" : [],
-		"views" : [],
+		"views" : 
+		[
+			{
+				"name" : "Companies",
+				"version" : "0.2.0",
+				"repo" : "https://github.com/sp-tms/tms-views-admin-default-companies"
+			}
+		],
 		"externals" : 
 		{
 			"composer" : 
