@@ -13,7 +13,7 @@
 		"core" : 
 		{
 			"name" : "Core",
-			"version" : "0.0.0-rc.15",
+			"version" : "0.0.0-rc.16",
 			"repo" : "https://github.com/sp-framework/core"
 		},
 		"apptype" : 
@@ -26,7 +26,7 @@
 		[
 			{
 				"name" : "Companies",
-				"version" : "0.0.0",
+				"version" : "0.4.0",
 				"repo" : "https://github.com/sp-tms/tms-packages-admin-companies"
 			}
 		],
@@ -35,7 +35,7 @@
 		[
 			{
 				"name" : "Companies",
-				"version" : "0.2.0",
+				"version" : "0.3.0",
 				"repo" : "https://github.com/sp-tms/tms-views-admin-default-companies"
 			}
 		],
